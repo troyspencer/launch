@@ -3,13 +3,9 @@
     "version": "1.0.0",
     "license": "GPL-3.0-or-later",
     "scripts": {
-        "dev": "run-p dev:game dev:react",
-        "dev:react": "cd react && yarn dev",
-        "dev:game": "gulp watch",
+        "dev": "cd react && yarn dev",
 
-        "build": "yarn build:game && yarn build:react",
-        "build:game": "gulp buildWasm",
-        "build:react": "cd react && yarn && yarn build",
+        "build": "cd react && yarn build",
 
         "serve:build": "cd server && sh ./run.sh",
         "gae-serve:build": "dev_appserver.py server/app.yaml",

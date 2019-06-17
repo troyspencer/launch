@@ -8,17 +8,17 @@ removeOldDockerImages() {
     fi
 }
 
-deployLaunchWasmBaseImage() {
-    launchwasm_base=$(docker images | grep launch-wasm-base)
-    if [[ -z "$launchwasm_base" ]]; then
-        echo "building the local launch-wasm-base image..."
-        docker build -f Dockerfile.localbase -t launch-wasm-base .
+deployLaunchBaseImage() {
+    launch_base=$(docker images | grep launch-base)
+    if [[ -z "$launch_base" ]]; then
+        echo "building the local launch-base image..."
+        docker build -f Dockerfile.localbase -t launch-base .
     fi
 }
 
-deployLaunchWasmImage() {
-    echo "building the launch-wasm image..."
-    docker build -f Dockerfile.local -t launch-wasm .
+deployLaunchImage() {
+    echo "building the launch image..."
+    docker build -f Dockerfile.local -t launch .
 }
 
 runDockerCompose() {
@@ -39,9 +39,9 @@ main() {
     removeOldDockerImages
     echo "finished detecting old docker images"
     # -- build new docker images
-    echo "building launch-wasm dependency pipeline..."
-    deployLaunchWasmBaseImage
-    deployLaunchWasmImage
+    echo "building launch dependency pipeline..."
+    deployLaunchBaseImage
+    deployLaunchImage
     echo "pipeline is ready"
     # -- run docker-compose
     echo "running docker compose..."

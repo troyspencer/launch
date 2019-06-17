@@ -1,13 +1,13 @@
 version: '3.7'
 services:
   web:
-    image: launch-wasm:latest
+    image: launch:latest
     security_opt:
       - seccomp:unconfined
     volumes:
       - type: bind
         source: ./dist
-        target: /go/src/github.com/troyspencer/launch-wasm/server/dist
+        target: /go/src/github.com/troyspencer/launch/server/dist
     ports:
       - 8080:8080
 volumes:
