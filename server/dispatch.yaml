@@ -1,3 +1,6 @@
 dispatch:
 - url: "launch-wasm.datagrinder.app/*"
+  service: launch-wasm
+
+- url: "launch.datagrinder.app/*"
   service: launch

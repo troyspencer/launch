@@ -1,4 +1,4 @@
-module github.com/troyspencer/launch-wasm/server
+module github.com/troyspencer/launch/server
 
 go 1.12
 

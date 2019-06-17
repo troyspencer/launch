@@ -7,11 +7,6 @@ handlers:
   static_files: dist/index.html
   upload: dist/index.html
 
-- url: /static/main\.wasm
-  static_files: dist/static/main.wasm
-  upload: dist/static/main\.wasm
-  mime_type: application/wasm
-
 - url: /static
   static_dir: dist/static
 

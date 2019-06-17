@@ -1,11 +1,5 @@
 steps:
 
-- name: golang
-  id: 'buildGame'
-  env: ['GO111MODULE=on','GOOS=js','GOARCH=wasm']
-  dir: 'game'
-  args: ['go', 'build','-o', '../react/static/main.wasm', 'main.go']
-
 - name: 'gcr.io/cloud-builders/yarn'
   waitFor: ['-']
   id: 'installYarnDependencies'
@@ -13,7 +7,7 @@ steps:
   args: ['install']
 
 - name: 'gcr.io/cloud-builders/yarn'
-  waitFor: ['buildGame', 'installYarnDependencies']
+  waitFor: ['installYarnDependencies']
   id: 'buildApp'
   dir: 'react'
   args: ['build']
