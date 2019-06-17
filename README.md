@@ -1,6 +1,6 @@
-# launch-wasm
+# launch
 
-WebAssembly implementation of launch
+React implementation of launch
 
 Play it here:
-https://launch-wasm.datagrinder.app/
+https://launch.datagrinder.app/
