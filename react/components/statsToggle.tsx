@@ -1,12 +1,17 @@
-import React from 'react'
+import * as React from 'react'
 import { Checkbox } from 'antd';
 
-export default function StatsToggle(props) {
+export interface StatsToggleProps { 
+  setShowStats: React.Dispatch<React.SetStateAction<boolean>>, 
+  showStats: boolean
+}
+
+export const StatsToggle = (props: StatsToggleProps) => {
   const styles = {
     checkbox: {
       color: "rgb(180,180,180)",
       margin: "1em"
-    }
+    } as React.CSSProperties
   }
 
   return (

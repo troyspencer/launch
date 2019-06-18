@@ -1,15 +1,25 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import Sidebar from "react-sidebar";
-import SettingsButton from "./settingsButton"
-import Stats from "./stats";
-import GameView from './gameView'
-import SidebarContent from "./sidebarContent";
+import { SettingsButton } from "./settingsButton"
+import  { Stats } from "./stats";
+import { GameView } from './gameView'
+import { SidebarContent } from "./sidebarContent";
 import FlexView from 'react-flexview';
 import { Spin, Icon } from 'antd';
 
-export default function Overlay(props) {
-    const [showStats, setShowStats] = useState(true)
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+export interface OverlayProps { 
+    paused: boolean,
+    setPaused: React.Dispatch<React.SetStateAction<boolean>>,
+    loading: boolean,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    loaded: boolean,
+    setLoaded: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+
+export const Overlay = (props: OverlayProps) => {
+    const [showStats, setShowStats] = React.useState(true)
+    const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
     const styles = {
         spin: {
@@ -19,7 +29,7 @@ export default function Overlay(props) {
         }
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (props.setPaused) {
             props.setPaused(sidebarOpen)
         }

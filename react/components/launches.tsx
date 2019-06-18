@@ -1,17 +1,24 @@
-import React, { useEffect} from 'react'
-import {Button, Tooltip, Badge} from 'antd'
+import * as React from 'react'
+import { Button, Tooltip, Badge } from 'antd'
 
 const styles = {
     button: {
         marginTop: '15px',
         marginLeft: '10px'
-    }
+    } as React.CSSProperties
 }
 
-export default function Launches(props) { 
+export interface LaunchesProps { 
+    launches: number
+    setLaunches: React.Dispatch<React.SetStateAction<number>>, 
+}
+
+
+
+export const Launches = (props: LaunchesProps) => { 
     
-    useEffect(() => {
-        const updateLaunches = (e) => props.setLaunches(e.launches)
+    React.useEffect(() => {
+        const updateLaunches = (e: any) => props.setLaunches(e.launches)
         window.document.addEventListener("updateLaunches", updateLaunches);
         return () => {
             window.document.removeEventListener("updateLaunches", updateLaunches);

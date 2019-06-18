@@ -1,40 +1,48 @@
-import React, { useState, useEffect } from 'react'
+import * as React from 'react'
 import {Button, Tooltip, Badge} from 'antd'
 
 const styles = {
     button: {
         marginTop: '15px',
         marginLeft: '10px'
-    }
+    } as React.CSSProperties
 }
 
-export default function Timer(props) {
-    const initialNow = Date.now()
-    const [startTime,setStartTime] = useState(initialNow)
-    const [now,setNow] = useState(initialNow)
-    const [totalPausedTime,setTotalPausedTime] = useState(0)
-    const [pauseStartedTime,setPauseStartedTime] = useState(initialNow)
-    const [startedLevel, setStartedLevel] = useState(false)
 
-    useEffect(() => {
+export interface TimerProps { 
+    launches: number,
+    paused: boolean,
+    setPaused: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+
+export const Timer = (props: TimerProps) => {
+    const initialNow = Date.now()
+    const [startTime,setStartTime] = React.useState(initialNow)
+    const [now,setNow] = React.useState(initialNow)
+    const [totalPausedTime,setTotalPausedTime] = React.useState(0)
+    const [pauseStartedTime,setPauseStartedTime] = React.useState(initialNow)
+    const [startedLevel, setStartedLevel] = React.useState(false)
+
+    React.useEffect(() => {
         if (props.launches != 0) {
             setStartedLevel(true)
         }
     }, [props.launches])
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (startedLevel) {
             setStartTime(Date.now())
         }
     }, [startedLevel])
 
-    useEffect(() => {
+    React.useEffect(() => {
         setNow(startTime)
         setPauseStartedTime(startTime)
         setTotalPausedTime(0)
     }, [startTime])
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!props.paused) {
             setPauseStartedTime(now)
         }
@@ -43,7 +51,7 @@ export default function Timer(props) {
         }
     }, [now, props.paused, startedLevel])
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (props.paused) {
             setPauseStartedTime(Date.now())
         } else {
@@ -51,7 +59,7 @@ export default function Timer(props) {
         }
     }, [props.paused])
 
-    useEffect(() => {
+    React.useEffect(() => {
         const handleResetTimer = () => { 
             setStartedLevel(false)
         }
@@ -67,7 +75,7 @@ export default function Timer(props) {
         }
     }, [])
 
-    const generateDisplayTime = (totalSeconds) => {
+    const generateDisplayTime = (totalSeconds: number) => {
         if (totalSeconds <= 0) {
             return ''
         }
@@ -77,19 +85,23 @@ export default function Timer(props) {
         var minutes = Math.floor((totalSeconds - (days * 86400) - (hours * 3600)) / 60);
         var seconds = totalSeconds - (days * 86400) - (hours * 3600) - (minutes * 60);
     
+        var daysString: string = days+''
+        var hoursString: string = hours+''
+        var minutesString: string = minutes+''
+        var secondsString: string = seconds+''
         if (minutes == 0 && hours == 0 && days == 0) {
-            return seconds+''
+            return secondsString
         }
-        if (seconds < 10) {seconds = "0"+seconds;}
+        if (seconds < 10) {secondsString = "0"+secondsString;}
         if (hours == 0 && days == 0) {
-            return minutes+':'+seconds
+            return minutesString+':'+secondsString
         }
-        if (minutes < 10) {minutes = "0"+minutes;}
+        if (minutes < 10) {minutesString = "0"+minutesString;}
         if (days == 0) {
-            return hours+':'+minutes+':'+seconds;
+            return hoursString+':'+minutesString+':'+secondsString;
         }
-        if (hours < 10) {hours = "0"+hours;}
-        return days+':'+hours+':'+minutes+':'+seconds;
+        if (hours < 10) {hoursString = "0"+hoursString;}
+        return daysString+':'+hoursString+':'+minutesString+':'+secondsString;
     }
 
     const generateElapsedTime = () => {

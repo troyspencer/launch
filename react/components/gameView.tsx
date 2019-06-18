@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react'
+import * as React from 'react'
 
 const styles = {
     mycanvas: {
-        position: "fixed",
+        position: 'fixed',
         backgroundColor: "black",
         opacity: 1.0,
         width: "100%",
@@ -11,10 +11,15 @@ const styles = {
         right:0,
         bottom:0,
         left:0
-    }
+    } as React.CSSProperties
+} 
+
+export interface GameViewProps { 
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>, 
+    setLoaded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function GameView(props) {
+export const GameView = (props: GameViewProps) => {
     props.setLoading(false)
     props.setLoaded(true)
 

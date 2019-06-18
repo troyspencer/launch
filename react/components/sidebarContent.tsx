@@ -1,5 +1,5 @@
-import React from "react";
-import StatsToggle from "./statsToggle";
+import * as React from "react";
+import { StatsToggle } from "./statsToggle";
 import { Col } from "antd";
 
 const styles = {
@@ -7,10 +7,15 @@ const styles = {
     color: "rgb(180,180,180)",
     fontSize: "1.5em",
     textAlign: "center",
-  }
+  } as React.CSSProperties
 }
 
-export default function SidebarContent(props) {
+export interface SidebarContentProps {
+  showStats: boolean,
+  setShowStats: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const SidebarContent = (props: SidebarContentProps) => {
     return (
       <Col>
         <div style={styles.header}>

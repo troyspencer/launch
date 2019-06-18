@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
-import Launches from './launches'
-import Timer from './timer'
+import * as React from 'react'
+import { Launches } from './launches'
+import { Timer } from './timer'
 import { Row, Col } from 'antd'
 
-export default function Stats(props) {
-    const [launches,setLaunches] = useState(0)
+export interface StatsProps { 
+    paused: boolean,
+    setPaused: React.Dispatch<React.SetStateAction<boolean>>, 
+    showStats: boolean
+}
+
+export const Stats = (props: StatsProps) => {
+    const [launches,setLaunches] = React.useState(0)
 
     return (
         <div hidden={!props.showStats}>
