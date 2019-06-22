@@ -8,13 +8,8 @@ import  { Stats } from "./stats/stats";
 
 export interface OverlayProps { 
     paused: boolean,
-    setPaused: React.Dispatch<React.SetStateAction<boolean>>,
-    loading: boolean,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    loaded: boolean,
-    setLoaded: React.Dispatch<React.SetStateAction<boolean>>
+    setPaused: React.Dispatch<React.SetStateAction<boolean>>
 }
-
 
 export const Overlay = (props: OverlayProps) => {
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
@@ -41,7 +36,7 @@ export const Overlay = (props: OverlayProps) => {
                 anchor={vertical ? "bottom" : "left"}   
                 open={sidebarOpen} 
             >
-                <Stats paused={props.paused}setPaused={props.setPaused} />
+                <Stats paused={props.paused} setPaused={props.setPaused} />
             </Drawer>
         </ThemeProvider>
     );
