@@ -56,7 +56,7 @@ var config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'production') {
-    config.output.path = __dirname + '/../server/dist'
+    config.output.path = __dirname + '/server/dist'
   }
 
   config.plugins =  [

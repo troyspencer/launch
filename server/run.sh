@@ -4,15 +4,7 @@ removeOldDockerImages() {
     old_images=$(docker images --filter "dangling=true" -q --no-trunc)
     if [[ -n "$old_images" ]]; then
         echo "removing old docker images..."
-        docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
-    fi
-}
-
-deployLaunchBaseImage() {
-    launch_base=$(docker images | grep launch-base)
-    if [[ -z "$launch_base" ]]; then
-        echo "building the local launch-base image..."
-        docker build -f Dockerfile.localbase -t launch-base .
+        docker rmi -f $(docker images --filter "dangling=true" -q --no-trunc)
     fi
 }
 
@@ -33,6 +25,7 @@ killDockerProcesses() {
 }
 
 main() {
+    set -e
     clear
     # -- delete old docker images
     echo "detecting old docker images..."
@@ -40,7 +33,6 @@ main() {
     echo "finished detecting old docker images"
     # -- build new docker images
     echo "building launch dependency pipeline..."
-    deployLaunchBaseImage
     deployLaunchImage
     echo "pipeline is ready"
     # -- run docker-compose

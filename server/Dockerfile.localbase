@@ -1,5 +1,0 @@
-FROM golang:stretch
-
-WORKDIR /go/src/github.com/troyspencer/launch/server
-ADD serve.go .
-RUN go get ./...
