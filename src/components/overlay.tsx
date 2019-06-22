@@ -5,7 +5,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/styles';
 
-import  { Stats } from "./stats";
+import  { Stats } from "./stats/stats";
 
 export interface OverlayProps { 
     paused: boolean,
@@ -18,7 +18,6 @@ export interface OverlayProps {
 
 
 export const Overlay = (props: OverlayProps) => {
-    const [showStats, setShowStats] = React.useState(true)
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
 
     React.useEffect(() => {
@@ -34,21 +33,15 @@ export const Overlay = (props: OverlayProps) => {
     });
 
     return ( 
-        <div>
-            <GameView 
-            setLoading={props.setLoading}
-            setLoaded={props.setLoaded}/>
-                    
-            <ThemeProvider theme={theme}>
-                <Drawer 
-                    variant="persistent"
-                    anchor="left"   
-                    open={sidebarOpen} 
-                >
-                    <Stats paused={props.paused}setPaused={props.setPaused} />
-                </Drawer>
-            </ThemeProvider>
-            
-        </div>
+        <ThemeProvider theme={theme}>
+            <GameView />
+            <Drawer 
+                variant="persistent"
+                anchor="left"   
+                open={sidebarOpen} 
+            >
+                <Stats paused={props.paused}setPaused={props.setPaused} />
+            </Drawer>
+        </ThemeProvider>
     );
 }
