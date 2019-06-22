@@ -6,12 +6,6 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 
-const styles = {
-    button: {
-        marginLeft: '10px'
-    } as React.CSSProperties
-}
-
 export interface LaunchesProps { 
     launches: number
     setLaunches: React.Dispatch<React.SetStateAction<number>>, 
@@ -34,9 +28,9 @@ export const Launches = (props: LaunchesProps) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Badge style={styles.button} badgeContent={props.launches}>
+            <Badge badgeContent={props.launches}>
                 <Tooltip placement="bottom" title="Launches">
-                    <Button style={styles.button} >
+                    <Button >
                         <TrendingUpIcon />
                     </Button>
                 </Tooltip>

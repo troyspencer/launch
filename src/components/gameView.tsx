@@ -14,15 +14,7 @@ const styles = {
     } as React.CSSProperties
 } 
 
-export interface GameViewProps { 
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>, 
-    setLoaded: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export const GameView = (props: GameViewProps) => {
-    props.setLoading(false)
-    props.setLoaded(true)
-
+export const GameView = () => {
     return (
         <canvas style={styles.mycanvas} id="mycanvas" />
     );

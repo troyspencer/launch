@@ -6,12 +6,6 @@ import TimerIcon from '@material-ui/icons/Timer'
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
-const styles = {
-    button: {
-        marginLeft: '10px'
-    } as React.CSSProperties
-}
-
 export interface TimerProps { 
     launches: number,
     paused: boolean,
@@ -119,11 +113,11 @@ export const Timer = (props: TimerProps) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Badge style={styles.button} badgeContent={generateElapsedTime()} invisible={props.launches == 0} color="primary">
+            <Badge badgeContent={generateElapsedTime()} invisible={props.launches == 0} color="primary">
                 <Tooltip placement="bottom" title="Elapsed Time">
-                <Button style={styles.button} >
-                        <TimerIcon />
-                    </Button>
+                <Button >
+                    <TimerIcon />
+                </Button>
                 </Tooltip>
             </Badge>
         </ThemeProvider>

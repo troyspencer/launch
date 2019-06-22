@@ -1,7 +1,7 @@
-FROM launch-base
-
+FROM golang:stretch
+ENV GO111MODULE=on
 WORKDIR /go/src/github.com/troyspencer/launch/server
-ADD serve.go .
-RUN go install -v .
+COPY go.mod go.sum serve.go ./
+RUN go build
 EXPOSE 8080
-CMD ["server"]
+CMD ["./server"]
