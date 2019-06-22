@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react'
-import Overlay from './overlay';
+import * as React from 'react'
+import { Overlay } from './overlay';
 
-export default function Game() {
-    const [loading, setLoading] = useState(true)
-    const [loaded, setLoaded] = useState(false)
-    const [paused, setPaused] = useState(false)
+export const Game = () => {
+    const [loading, setLoading] = React.useState(true)
+    const [loaded, setLoaded] = React.useState(false)
+    const [paused, setPaused] = React.useState(false)
 
     const pauseEvent = new Event("pause")
     const unpauseEvent = new Event("unpause")
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (paused) {
             window.document.dispatchEvent(pauseEvent)
         } else {
@@ -17,13 +17,13 @@ export default function Game() {
         }
     }, [paused])
 
-    const handleKey = (e) => {
+    const handleKey = (e: KeyboardEvent) => {
         if (e.which == 32) {
             setPaused(!paused)
         }
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         window.addEventListener("keyup", handleKey);
         return () => {
             window.removeEventListener("keyup", handleKey);
