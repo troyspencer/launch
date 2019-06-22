@@ -4,13 +4,13 @@ import { Overlay } from './overlay';
 export const Game = () => {
     const [paused, setPaused] = React.useState(false)
 
-    const handleKey = (e: KeyboardEvent) => {
-        if (e.which == 32) {
-            setPaused(!paused)
-        }
-    }
-
     React.useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.which == 32) {
+                setPaused(!paused)
+            }
+        }
+        
         window.addEventListener("keyup", handleKey);
         return () => {
             window.removeEventListener("keyup", handleKey);
