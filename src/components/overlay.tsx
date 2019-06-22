@@ -2,9 +2,8 @@ import * as React from "react";
 import Drawer from '@material-ui/core/Drawer';
 import { GameView } from './gameView'
 import { createMuiTheme } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/styles';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import  { Stats } from "./stats/stats";
 
 export interface OverlayProps { 
@@ -19,6 +18,8 @@ export interface OverlayProps {
 
 export const Overlay = (props: OverlayProps) => {
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
+
+    const vertical = useMediaQuery('(max-aspect-ratio:1/1)');
 
     React.useEffect(() => {
         if (props.setPaused) {
@@ -37,7 +38,7 @@ export const Overlay = (props: OverlayProps) => {
             <GameView />
             <Drawer 
                 variant="persistent"
-                anchor="left"   
+                anchor={vertical ? "bottom" : "left"}   
                 open={sidebarOpen} 
             >
                 <Stats paused={props.paused}setPaused={props.setPaused} />
