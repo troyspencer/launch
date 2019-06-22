@@ -29,8 +29,8 @@ export const StatsToggle = (props: StatsToggleProps) => {
                     <Switch 
                         checked={props.showStats} 
                         onChange={() => props.setShowStats(!props.showStats)} 
-                        value="checkedA" />}
-                label={props.showStats ? "Stats Visible" : "Stats Hidden"}
+                    />}
+                label="Stats"
             />
         </ThemeProvider>
   )

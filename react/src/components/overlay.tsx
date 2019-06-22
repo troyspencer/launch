@@ -1,12 +1,11 @@
 import * as React from "react";
-import Sidebar from "react-sidebar";
-import { SettingsButton } from "./settingsButton"
-import  { Stats } from "./stats";
+import Drawer from '@material-ui/core/Drawer';
 import { GameView } from './gameView'
-import { SidebarContent } from "./sidebarContent";
-import FlexView from 'react-flexview';
-import { Container } from "@material-ui/core";
-
+import { createMuiTheme } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { ThemeProvider } from '@material-ui/styles';
+import { StatsToggle } from "./statsToggle";
+import  { Stats } from "./stats";
 
 export interface OverlayProps { 
     paused: boolean,
@@ -20,7 +19,7 @@ export interface OverlayProps {
 
 export const Overlay = (props: OverlayProps) => {
     const [showStats, setShowStats] = React.useState(true)
-    const [sidebarOpen, setSidebarOpen] = React.useState(false)
+    const [sidebarOpen, setSidebarOpen] = React.useState(true)
 
     React.useEffect(() => {
         if (props.setPaused) {
@@ -28,24 +27,30 @@ export const Overlay = (props: OverlayProps) => {
         }
     }, [sidebarOpen, props.setPaused])
 
-    return ( 
-        <Sidebar
-            sidebar={<SidebarContent showStats={showStats} setShowStats={setShowStats} />}
-            open={sidebarOpen}
-            onSetOpen={setSidebarOpen}
-            styles={{ sidebar: { background: "#464646", color: "rgb(180,180,180)", width: "12em"} }}>
-                
-                    <GameView 
-                    setLoading={props.setLoading}
-                    setLoaded={props.setLoaded}/>
-                    
-                    <div hidden={!props.loaded || sidebarOpen}>
-                        <SettingsButton onClick={() => {setSidebarOpen(!sidebarOpen)}} />
-                        <Stats paused={props.paused} showStats={showStats} setPaused={props.setPaused} />
-                    </div>
-                
-                
+    const theme = createMuiTheme({
+        palette: {
+          type: 'dark',
+        },
+    });
 
-        </Sidebar>
+    return ( 
+        <div>
+            <GameView 
+            setLoading={props.setLoading}
+            setLoaded={props.setLoaded}/>
+                    
+            <ThemeProvider theme={theme}>
+                <Drawer 
+                    variant="persistent"
+                    anchor="left"   
+                    open={sidebarOpen} 
+                >
+                    
+                    <StatsToggle showStats={showStats} setShowStats={setShowStats} />
+                    <Stats paused={props.paused} showStats={showStats} setPaused={props.setPaused} />
+                </Drawer>
+            </ThemeProvider>
+            
+        </div>
     );
 }
