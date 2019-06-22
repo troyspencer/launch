@@ -1,5 +1,10 @@
 import * as React from 'react'
-import {Button, Tooltip, Badge} from 'antd'
+import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
+import Badge from '@material-ui/core/Badge'
+import TimerIcon from '@material-ui/icons/Timer'
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 
 const styles = {
     button: {
@@ -8,13 +13,11 @@ const styles = {
     } as React.CSSProperties
 }
 
-
 export interface TimerProps { 
     launches: number,
     paused: boolean,
     setPaused: React.Dispatch<React.SetStateAction<boolean>>
 }
-
 
 export const Timer = (props: TimerProps) => {
     const initialNow = Date.now()
@@ -75,9 +78,9 @@ export const Timer = (props: TimerProps) => {
         }
     }, [])
 
-    const generateDisplayTime = (totalSeconds: number) => {
+    const generateDisplayTime = (totalSeconds: number): string => {
         if (totalSeconds <= 0) {
-            return ''
+            return '0'
         }
 
         var days   = Math.floor(totalSeconds / 86400);
@@ -109,11 +112,22 @@ export const Timer = (props: TimerProps) => {
         return generateDisplayTime(totalSeconds)
     }
 
+    const theme = createMuiTheme({
+        palette: {
+          type: 'dark',
+        },
+    });
+
     return (
-        <Badge style={styles.button} count={generateElapsedTime()}>
-            <Tooltip placement="bottom" title="Elapsed Time">
-                <Button style={styles.button} type="primary" icon="clock-circle" />
-            </Tooltip>
-        </Badge>
+        <ThemeProvider theme={theme}>
+            <Badge style={styles.button} badgeContent={generateElapsedTime()} invisible={props.launches == 0} color="primary">
+                <Tooltip placement="bottom" title="Elapsed Time">
+                <Button style={styles.button} >
+                        <TimerIcon />
+                    </Button>
+                </Tooltip>
+            </Badge>
+        </ThemeProvider>
+
     )
 }

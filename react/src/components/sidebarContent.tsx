@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StatsToggle } from "./statsToggle";
-import { Col } from "antd";
+import Grid from "@material-ui/core/Grid";
 
 const styles = {
   header: {
@@ -17,11 +17,13 @@ export interface SidebarContentProps {
 
 export const SidebarContent = (props: SidebarContentProps) => {
     return (
-      <Col>
-        <div style={styles.header}>
-          Settings 
-        </div> 
-        <StatsToggle showStats={props.showStats} setShowStats={props.setShowStats} />
-      </Col>
+      <Grid container spacing={1}>
+        <Grid item xs={12} style={styles.header}>
+          Settings
+        </Grid>
+        <Grid item xs={12} >
+          <StatsToggle showStats={props.showStats} setShowStats={props.setShowStats} />
+        </Grid>
+      </Grid>
     )
 }

@@ -5,7 +5,8 @@ import  { Stats } from "./stats";
 import { GameView } from './gameView'
 import { SidebarContent } from "./sidebarContent";
 import FlexView from 'react-flexview';
-import { Spin, Icon } from 'antd';
+import { Container } from "@material-ui/core";
+
 
 export interface OverlayProps { 
     paused: boolean,
@@ -21,14 +22,6 @@ export const Overlay = (props: OverlayProps) => {
     const [showStats, setShowStats] = React.useState(true)
     const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
-    const styles = {
-        spin: {
-        marginTop: '20em',
-        color: 'rgb(180,180,180',
-        backgroundColor: 'black'
-        }
-    }
-
     React.useEffect(() => {
         if (props.setPaused) {
             props.setPaused(sidebarOpen)
@@ -40,21 +33,19 @@ export const Overlay = (props: OverlayProps) => {
             sidebar={<SidebarContent showStats={showStats} setShowStats={setShowStats} />}
             open={sidebarOpen}
             onSetOpen={setSidebarOpen}
-            styles={{ sidebar: { background: "#464646", color: "rgb(180,180,180)", width: "10em"} }}>
-            <Spin 
-                tip="Loading WebAssembly..." 
-                size="large" 
-                spinning={props.loading}
-                style={styles.spin}
-                indicator={<Icon type="loading" spin />}>
-                <GameView 
+            styles={{ sidebar: { background: "#464646", color: "rgb(180,180,180)", width: "12em"} }}>
+                
+                    <GameView 
                     setLoading={props.setLoading}
                     setLoaded={props.setLoaded}/>
-                <FlexView hidden={!props.loaded || sidebarOpen} vAlignContent='top'>
-                    <SettingsButton onClick={() => {setSidebarOpen(!sidebarOpen)}} />
-                    <Stats paused={props.paused} showStats={showStats} setPaused={props.setPaused} />
-                </FlexView>
-            </Spin>
+                    
+                    <div hidden={!props.loaded || sidebarOpen}>
+                        <SettingsButton onClick={() => {setSidebarOpen(!sidebarOpen)}} />
+                        <Stats paused={props.paused} showStats={showStats} setPaused={props.setPaused} />
+                    </div>
+                
+                
+
         </Sidebar>
     );
 }

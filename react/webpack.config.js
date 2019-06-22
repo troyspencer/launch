@@ -4,13 +4,11 @@ const {GenerateSW} = require('workbox-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); 
 const webpack = require('webpack'); // to access built-in plugins
 const path = require('path');
-const fs  = require('fs');
-const lessToJs = require('less-vars-to-js');
-const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './components/theme.less'), 'utf8'));
 
 var config = {
   resolve: {
-    modules: ['components', 'node_modules']
+    // Add '.ts' and '.tsx' as resolvable extensions.
+    extensions: [".ts", ".tsx", ".js", ".json"]
   },
   devtool: 'source-map',
   stats: {
@@ -21,7 +19,7 @@ var config = {
     chunkOrigins: false,
     modules: false
   },
-  entry: './components/index.tsx',
+  entry: './src/index.tsx',
   output: {
     path: __dirname + '/dist',
     filename: '[name].chunkhash.bundle.js',
@@ -31,35 +29,16 @@ var config = {
   module: {
     rules: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+      { 
+        test: /\.tsx?$/, 
+        loader: "awesome-typescript-loader" 
+      },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: "babel-loader",
-        options: {
-          plugins: [
-            ['import', { libraryName: "antd", style: true }]
-          ]
-        }
+      { 
+        enforce: "pre", 
+        test: /\.js$/, 
+        loader: "source-map-loader"
       },
-      {
-        test: /\.less$/,
-        use: [
-          {loader: 'style-loader'},
-          {loader: 'css-loader'}, 
-          {
-            loader: 'less-loader', // compiles Less to CSS
-            options: {
-              modifyVars: themeVariables,
-              root: path.resolve(__dirname, './'),
-              javascriptEnabled: true,
-           },
-          }
-        ],
-      },
-
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
         loader: 'url-loader',
