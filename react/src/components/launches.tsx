@@ -8,7 +8,6 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 
 const styles = {
     button: {
-        marginTop: '15px',
         marginLeft: '10px'
     } as React.CSSProperties
 }

@@ -4,7 +4,7 @@ import { GameView } from './gameView'
 import { createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/styles';
-import { StatsToggle } from "./statsToggle";
+
 import  { Stats } from "./stats";
 
 export interface OverlayProps { 
@@ -45,9 +45,7 @@ export const Overlay = (props: OverlayProps) => {
                     anchor="left"   
                     open={sidebarOpen} 
                 >
-                    
-                    <StatsToggle showStats={showStats} setShowStats={setShowStats} />
-                    <Stats paused={props.paused} showStats={showStats} setPaused={props.setPaused} />
+                    <Stats paused={props.paused}setPaused={props.setPaused} />
                 </Drawer>
             </ThemeProvider>
             

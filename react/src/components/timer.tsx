@@ -8,7 +8,6 @@ import { ThemeProvider } from '@material-ui/styles';
 
 const styles = {
     button: {
-        marginTop: '15px',
         marginLeft: '10px'
     } as React.CSSProperties
 }
