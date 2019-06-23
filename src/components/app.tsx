@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Game } from './game';
+import { Game } from './game/game';
 
 export const App = () => {
     return ( 
