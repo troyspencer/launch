@@ -12,12 +12,20 @@ var config = {
   },
   devtool: 'source-map',
   stats: {
-    cached: false,
-    cachedAssets: false,
+    colors: true,
+    hash: false,
+    version: false,
+    timings: false,
+    assets: false,
     chunks: false,
-    chunkModules: false,
-    chunkOrigins: false,
-    modules: false
+    modules: false,
+    reasons: false,
+    children: false,
+    source: false,
+    errors: false,
+    errorDetails: false,
+    warnings: false,
+    publicPath: false
   },
   entry: './src/index.tsx',
   output: {
