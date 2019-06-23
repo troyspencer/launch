@@ -14,17 +14,18 @@ export const Game = () => {
 
     React.useEffect(() => {
         var worldScale = 0.125
+        var simSpeed = 2
         var width = document.body.clientWidth
         var height = document.body.clientHeight
         var pl = planck, Vec2 = pl.Vec2;
-        var world = new pl.World(Vec2(0, -15));
-        world.setGravity(Vec2(0,15))
-        var ground = world.createBody(Vec2(30, height*worldScale));
+        var world = new pl.World();
+        world.setGravity(Vec2(0,10))
+        var ground = world.createBody(Vec2(0, height*worldScale));
         ground.createFixture(pl.Edge(Vec2(0, 0.0), Vec2(width*worldScale, 0.0)));
     
         var circle = pl.Circle(1.0);
 
-        var ball = world.createDynamicBody(Vec2(width*worldScale / 2, 20.0));
+        var ball = world.createDynamicBody(Vec2(width*worldScale / 2, height*worldScale / 2));
         ball.createFixture(circle, {
             density: 1.0,
             restitution: 1.0
@@ -42,7 +43,7 @@ export const Game = () => {
             const context = canvas.getContext('2d');
             context.scale(1/0.125, 1/0.125)
             // in each frame call world.step(timeStep) with fixed timeStep
-            world.step(tDiff/1000, 60, 120);
+            world.step(tDiff/1000 * simSpeed, 60, 120);
             // iterate over bodies and fixtures
             for (var body = world.getBodyList(); body; body = body.getNext()) {
                 for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
