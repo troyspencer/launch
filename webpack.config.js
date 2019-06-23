@@ -22,8 +22,6 @@ var config = {
     reasons: false,
     children: false,
     source: false,
-    errors: false,
-    errorDetails: false,
     warnings: false,
     publicPath: false
   },
