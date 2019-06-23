@@ -4319,6 +4319,10 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
+planck-js@enlightware/planck.js:
+  version "0.3.5"
+  resolved "https://codeload.github.com/enlightware/planck.js/tar.gz/acd2484b11f2e07aa7a18651248d5a3b5ba6fa75"
+
 popper.js@^1.14.1:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
