@@ -1,39 +1,59 @@
 import * as React from 'react'
-import { Overlay } from './overlay';
+import Drawer from '@material-ui/core/Drawer';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import  { Stats } from "./stats/stats";
 
 export const Game = () => {
-    const [loading, setLoading] = React.useState(true)
-    const [loaded, setLoaded] = React.useState(false)
     const [paused, setPaused] = React.useState(false)
-
-    const pauseEvent = new Event("pause")
-    const unpauseEvent = new Event("unpause")
+    const [sidebarOpen, setSidebarOpen] = React.useState(true)
 
     React.useEffect(() => {
-        if (paused) {
-            window.document.dispatchEvent(pauseEvent)
-        } else {
-            window.document.dispatchEvent(unpauseEvent)
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.which == 32) {
+                setPaused(!paused)
+            }
         }
-    }, [paused])
 
-    const handleKey = (e: KeyboardEvent) => {
-        if (e.which == 32) {
-            setPaused(!paused)
-        }
-    }
-
-    React.useEffect(() => {
         window.addEventListener("keyup", handleKey);
         return () => {
             window.removeEventListener("keyup", handleKey);
         }
     }, [paused])
 
+    const vertical = useMediaQuery('(max-aspect-ratio:1/1)');
+
+    const theme = createMuiTheme({
+        palette: {
+          type: 'dark',
+        },
+    });
+
+    const styles = {
+        mycanvas: {
+            position: 'fixed',
+            backgroundColor: "black",
+            opacity: 1.0,
+            width: "100%",
+            height: "100%",
+            top:0,
+            right:0,
+            bottom:0,
+            left:0
+        } as React.CSSProperties
+    } 
+
     return (
-        <Overlay 
-        paused={paused} setPaused={setPaused}
-        loading={loading} setLoading={setLoading}
-        loaded={loaded} setLoaded={setLoaded} />
+        <ThemeProvider theme={theme}>
+            <canvas style={styles.mycanvas} id="mycanvas" />
+            <Drawer 
+                variant="persistent"
+                anchor={vertical ? "bottom" : "left"}   
+                open={sidebarOpen} 
+            >
+                <Stats paused={paused} setPaused={setPaused} />
+            </Drawer>
+        </ThemeProvider>
     );
 }

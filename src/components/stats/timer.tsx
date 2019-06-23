@@ -121,6 +121,5 @@ export const Timer = (props: TimerProps) => {
                 </Tooltip>
             </Badge>
         </ThemeProvider>
-
     )
 }
