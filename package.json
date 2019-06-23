@@ -7,13 +7,10 @@
     "scripts": {
         "dev": "yarn webpack-dev-server --mode development",
         "build": "yarn webpack --mode production",
-
         "serve:build": "cd server && sh ./run.sh",
         "gae-serve:build": "dev_appserver.py server/app.yaml",
-
         "deploy": "yarn build && gcloud app deploy --project=keen-ascent-205301 server/app.yaml",
         "deploy:dev": "yarn build && gcloud app deploy --project=keen-ascent-205301 --no-promote server/app.yaml --verbosity=debug",
-
         "dispatch": "gcloud app deploy --project=keen-ascent-205301 server/dispatch.yaml"
     },
     "dependencies": {
@@ -21,13 +18,8 @@
         "@material-ui/icons": "^4.2.0",
         "@types/react": "^16.8.20",
         "@types/react-dom": "^16.8.4",
-        "@types/react-sidebar": "^3.0.0",
         "react": "^16.5.2",
-        "react-blocks": "^1.1.4",
-        "react-dom": "^16.5.2",
-        "react-flexview": "^4.0.3",
-        "react-sidebar": "^3.0.2",
-        "use-methods": "^0.5.1"
+        "react-dom": "^16.5.2"
     },
     "devDependencies": {
         "@babel/core": "^7.1.2",
@@ -37,17 +29,11 @@
         "@babel/polyfill": "^7.0.0",
         "@babel/preset-env": "^7.1.0",
         "@babel/preset-react": "^7.0.0",
-        "add-asset-html-webpack-plugin": "^3.0.1",
         "awesome-typescript-loader": "^5.2.1",
-        "babel-loader": "^8.0.4",
-        "babel-plugin-import": "^1.12.0",
         "clean-webpack-plugin": "^3.0.0",
         "copy-webpack-plugin": "^5.0.3",
-        "css-loader": "^2.1.1",
-        "file-loader": "^4.0.0",
         "html-webpack-plugin": "^3.2.0",
         "source-map-loader": "^0.2.4",
-        "style-loader": "^0.23.1",
         "typescript": "^3.5.2",
         "url-loader": "^2.0.0",
         "webpack": "^4.20.2",

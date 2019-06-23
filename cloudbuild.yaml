@@ -3,13 +3,11 @@ steps:
 - name: 'gcr.io/cloud-builders/yarn'
   waitFor: ['-']
   id: 'installYarnDependencies'
-  dir: 'react'
   args: ['install']
 
 - name: 'gcr.io/cloud-builders/yarn'
   waitFor: ['installYarnDependencies']
   id: 'buildApp'
-  dir: 'react'
   args: ['build']
 
 - name: 'gcr.io/cloud-builders/gcloud'
