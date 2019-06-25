@@ -111,6 +111,12 @@ export const Game = () => {
                     
             </canvas>
             <Drawer 
+                PaperProps={{
+                    style:{
+                            minHeight: document.body.clientHeight - canvasSize.height,
+                            minWidth: document.body.clientWidth - canvasSize.width
+                    }
+                }}
                 variant="persistent"
                 anchor={vertical ? "bottom" : "right"}   
                 open={sidebarOpen} >
