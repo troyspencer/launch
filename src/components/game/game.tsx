@@ -10,23 +10,35 @@ import * as planck from 'planck-js';
 export const Game = () => {
     const [paused, setPaused] = React.useState(false)
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
-
     const canvasRef = React.useRef(null)
 
-    React.useEffect(() => {
-        const worldProps: WorldProps = {
-            worldScale: 0.125,
-            simSpeed: 2,
+    const calculateCanvasSize = (width: number, height: number): {width: number, height: number} => {
+        if (width < height) {
+            return {width: width, height: width * 1.4}
         }
-        const world = World(worldProps)
+        return {width: height * 1.4, height: height} 
+    }
+
+    const canvasSize = calculateCanvasSize(document.body.clientWidth, document.body.clientHeight)
+
+    const worldProps: WorldProps = {
+        worldScale: 0.125,
+        simSpeed: 2,
+        width: canvasSize.width,
+        height: canvasSize.height
+    }
+    const world = World(worldProps)
+
+    React.useEffect(() => {
+        
         var tMark = 0
         const render = (timestamp: number) => {
             const tDiff = timestamp - tMark
             tMark = timestamp
 
             const canvas = canvasRef.current;
-            canvas.width = document.body.clientWidth
-            canvas.height = document.body.clientHeight
+            canvas.width = canvasSize.width
+            canvas.height = canvasSize.height
             const context = canvas.getContext('2d');
             context.scale(1/0.125, 1/0.125)
             // in each frame call world.step(timeStep) with fixed timeStep
@@ -94,12 +106,14 @@ export const Game = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <canvas ref={canvasRef} />
+            <canvas 
+                ref={canvasRef} >
+                    
+            </canvas>
             <Drawer 
                 variant="persistent"
-                anchor={vertical ? "bottom" : "left"}   
-                open={sidebarOpen} 
-            >
+                anchor={vertical ? "bottom" : "right"}   
+                open={sidebarOpen} >
                 <Stats paused={paused} setPaused={setPaused} />
             </Drawer>
         </ThemeProvider>
