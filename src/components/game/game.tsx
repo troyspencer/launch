@@ -3,47 +3,46 @@ import Drawer from '@material-ui/core/Drawer';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import  { Stats } from "./stats/stats";
+import  { Stats } from "../stats/stats";
+import { World, WorldProps } from './world'
 import * as planck from 'planck-js';
 
 export const Game = () => {
     const [paused, setPaused] = React.useState(false)
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
-
     const canvasRef = React.useRef(null)
 
-    React.useEffect(() => {
-        var worldScale = 0.125
-        var simSpeed = 2
-        var width = document.body.clientWidth
-        var height = document.body.clientHeight
-        var pl = planck, Vec2 = pl.Vec2;
-        var world = new pl.World();
-        world.setGravity(Vec2(0,10))
-        var ground = world.createBody(Vec2(0, height*worldScale));
-        ground.createFixture(pl.Edge(Vec2(0, 0.0), Vec2(width*worldScale, 0.0)));
-    
-        var circle = pl.Circle(1.0);
+    const calculateCanvasSize = (width: number, height: number): {width: number, height: number} => {
+        if (width < height) {
+            return {width: width, height: width * 1.4}
+        }
+        return {width: height * 1.4, height: height} 
+    }
 
-        var ball = world.createDynamicBody(Vec2(width*worldScale / 2, height*worldScale / 2));
-        ball.createFixture(circle, {
-            density: 1.0,
-            restitution: 1.0
-        });
+    const canvasSize = calculateCanvasSize(document.body.clientWidth, document.body.clientHeight)
+
+    const worldProps: WorldProps = {
+        worldScale: 0.125,
+        simSpeed: 2,
+        width: canvasSize.width,
+        height: canvasSize.height
+    }
+    const world = World(worldProps)
+
+    React.useEffect(() => {
         
         var tMark = 0
-    
         const render = (timestamp: number) => {
             const tDiff = timestamp - tMark
             tMark = timestamp
 
             const canvas = canvasRef.current;
-            canvas.width = document.body.clientWidth
-            canvas.height = document.body.clientHeight
+            canvas.width = canvasSize.width
+            canvas.height = canvasSize.height
             const context = canvas.getContext('2d');
             context.scale(1/0.125, 1/0.125)
             // in each frame call world.step(timeStep) with fixed timeStep
-            world.step(tDiff/1000 * simSpeed, 60, 120);
+            world.step(tDiff/1000 * worldProps.simSpeed, 60, 120);
             // iterate over bodies and fixtures
             for (var body = world.getBodyList(); body; body = body.getNext()) {
                 for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
@@ -107,12 +106,20 @@ export const Game = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <canvas ref={canvasRef} />
+            <canvas 
+                ref={canvasRef} >
+                    
+            </canvas>
             <Drawer 
+                PaperProps={{
+                    style:{
+                            minHeight: document.body.clientHeight - canvasSize.height,
+                            minWidth: document.body.clientWidth - canvasSize.width
+                    }
+                }}
                 variant="persistent"
-                anchor={vertical ? "bottom" : "left"}   
-                open={sidebarOpen} 
-            >
+                anchor={vertical ? "bottom" : "right"}   
+                open={sidebarOpen} >
                 <Stats paused={paused} setPaused={setPaused} />
             </Drawer>
         </ThemeProvider>
