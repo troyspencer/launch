@@ -4,10 +4,9 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import  { Stats } from "../stats/stats";
-import { World, WorldProps, LaunchUserData, IsLaunchUserData } from './world'
+import { World, IsLaunchUserData } from './world'
 import * as planck from 'planck-js';
 import { LaunchPlayer, LaunchPlayerProps }  from './physics'
-import { width, height } from '@material-ui/system';
 
 export const Game = () => {
     const [world, setWorld] = React.useState(planck.World())
@@ -56,7 +55,7 @@ export const Game = () => {
                     context.strokeStyle = "rgba(180, 180,180,1)"
                     
                     const userData: any = body.getUserData()
-                    if ( IsLaunchUserData(userData))  {
+                    if (IsLaunchUserData(userData)) {
                         console.log(userData.fillStyle)
                         context.fillStyle = userData.fillStyle
                         context.strokeStyle = userData.strokeStyle
