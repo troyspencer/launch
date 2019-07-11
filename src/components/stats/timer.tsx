@@ -8,8 +8,7 @@ import { ThemeProvider } from '@material-ui/styles';
 
 export interface TimerProps { 
     launches: number,
-    paused: boolean,
-    setPaused: React.Dispatch<React.SetStateAction<boolean>>
+    paused: boolean
 }
 
 export const Timer = (props: TimerProps) => {

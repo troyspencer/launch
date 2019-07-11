@@ -10,12 +10,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export interface StatsProps { 
     paused: boolean,
-    setPaused: React.Dispatch<React.SetStateAction<boolean>>, 
-    
+    launches: number
 }
 
 export const Stats = (props: StatsProps) => {
-    const [launches,setLaunches] = React.useState(0)
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             root: {
@@ -31,15 +29,15 @@ export const Stats = (props: StatsProps) => {
     const classes = useStyles({});
 
     return (
-    <ExpansionPanel>
+    <ExpansionPanel defaultExpanded={true}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>
               Statistics
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-            <Launches launches={launches} setLaunches={setLaunches} />
-            <Timer launches={launches} paused={props.paused} setPaused={props.setPaused} />
+            <Launches launches={props.launches} />
+            <Timer launches={props.launches} paused={props.paused} />
         </ExpansionPanelDetails>
       </ExpansionPanel>
             

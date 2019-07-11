@@ -8,7 +8,6 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 
 export interface LaunchesProps { 
     launches: number
-    setLaunches: React.Dispatch<React.SetStateAction<number>>, 
 }
 
 export const Launches = (props: LaunchesProps) => { 
@@ -17,14 +16,6 @@ export const Launches = (props: LaunchesProps) => {
           type: 'dark',
         },
     });
-
-    React.useEffect(() => {
-        const updateLaunches = (e: any) => props.setLaunches(e.launches)
-        window.document.addEventListener("updateLaunches", updateLaunches);
-        return () => {
-            window.document.removeEventListener("updateLaunches", updateLaunches);
-        } 
-    },[])
 
     return (
         <ThemeProvider theme={theme}>
