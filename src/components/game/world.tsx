@@ -1,17 +1,37 @@
 import * as planck from 'planck-js';
+import * as React from 'react'
 
 export interface WorldProps { 
+    world: planck.World,
+    player: planck.Body,
+    setPlayer: React.Dispatch<React.SetStateAction<planck.Body>>, 
     worldScale: number
     simSpeed: number
     width: number
     height: number
 }
 
-export const World = (props: WorldProps): planck.World => {
-    var world = new planck.World();
-    world.setGravity(planck.Vec2(0,10))
-    PopulateWorld(world, props)
-    return world
+export interface LaunchUserData {
+    fillStyle:   string,
+    strokeStyle: string,
+    sticky:  boolean,
+    bouncy:  boolean,
+    breaks:  boolean,
+    absorbs: boolean,
+}
+
+export const IsLaunchUserData = (userData: any): userData is LaunchUserData => {
+    if (userData == null) {
+        return false
+    }
+    return userData.fillStyle !== undefined
+}
+
+export const World = (props: WorldProps): JSX.Element => {
+    React.useEffect(() => {
+        PopulateWorld(props.world, props)
+    },[props.height, props.width])
+    return <div />
 }
 
 export const ClearWorld = (world: planck.World) => {
@@ -47,10 +67,20 @@ const CreatePlayer = (world: planck.World, props: WorldProps) => {
         )
     )
     var circle = planck.Circle(smallestDimension * props.worldScale / 64);
+    const userData: LaunchUserData = {
+        fillStyle:   "rgba(0, 180,180,1)",
+        strokeStyle: "rgba(180, 180,180,1)",
+        sticky:  true,
+        bouncy:  false,
+        breaks:  false,
+        absorbs: false,
+    } 
     player.createFixture(circle, {
+        userData: userData,
         density: 1.0,
         restitution: 1.0
     });
+    props.setPlayer(player)
 }
 
 const CreateLaunchBlock = (world: planck.World, props: WorldProps) => {

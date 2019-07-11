@@ -4,11 +4,18 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import  { Stats } from "../stats/stats";
-import { World, WorldProps } from './world'
+import { World, WorldProps, LaunchUserData, IsLaunchUserData } from './world'
 import * as planck from 'planck-js';
+import { LaunchPlayer, LaunchPlayerProps }  from './physics'
+import { width, height } from '@material-ui/system';
 
 export const Game = () => {
+    const [world, setWorld] = React.useState(planck.World())
+    const [worldScale, setWorldScale] = React.useState(0.125)
+    const [simSpeed, setSimSpeed] = React.useState(2)
+    const [player, setPlayer] = React.useState<planck.Body>()
     const [paused, setPaused] = React.useState(false)
+    const [launches,setLaunches] = React.useState(0)
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
     const canvasRef = React.useRef(null)
 
@@ -20,14 +27,6 @@ export const Game = () => {
     }
 
     const canvasSize = calculateCanvasSize(document.body.clientWidth, document.body.clientHeight)
-
-    const worldProps: WorldProps = {
-        worldScale: 0.125,
-        simSpeed: 2,
-        width: canvasSize.width,
-        height: canvasSize.height
-    }
-    const world = World(worldProps)
 
     React.useEffect(() => {
         
@@ -42,13 +41,27 @@ export const Game = () => {
             const context = canvas.getContext('2d');
             context.scale(1/0.125, 1/0.125)
             // in each frame call world.step(timeStep) with fixed timeStep
-            world.step(tDiff/1000 * worldProps.simSpeed, 60, 120);
+            const timestep = paused ? 0 : tDiff/1000 * simSpeed
+
+            world.step(timestep, 60, 120);
+
+            // clear canvas
+            context.clearRect(0,0,canvasSize.width*worldScale, canvasSize.height*worldScale)
+
             // iterate over bodies and fixtures
             for (var body = world.getBodyList(); body; body = body.getNext()) {
                 for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
+                    
                     context.fillStyle = "rgba(180, 180,180,1)"
                     context.strokeStyle = "rgba(180, 180,180,1)"
-            
+                    
+                    const userData: any = body.getUserData()
+                    if ( IsLaunchUserData(userData))  {
+                        console.log(userData.fillStyle)
+                        context.fillStyle = userData.fillStyle
+                        context.strokeStyle = userData.strokeStyle
+                    }
+                    
                     const shape = fixture.getShape()
                     // draw or update fixture
                     context.save()
@@ -81,7 +94,7 @@ export const Game = () => {
         }
 
         window.requestAnimationFrame(render);
-    },[])
+    },[paused])
 
     React.useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
@@ -96,6 +109,49 @@ export const Game = () => {
         }
     }, [paused])
 
+    React.useEffect(() => {
+        const handleClick = (e: MouseEvent) => {
+            if (e.target != canvasRef.current) {
+                return
+            }
+
+            const mx = e.clientX * worldScale
+            const my = e.clientY * worldScale
+
+            const launchPlayerProps: LaunchPlayerProps = {
+                worldScale: worldScale,
+                width: canvasSize.width,
+                height: canvasSize.height,
+                player: player,
+                launches: launches,
+                setLaunches: setLaunches,
+                mx: mx,
+                my: my
+            }
+
+            LaunchPlayer(launchPlayerProps)
+            /*
+        
+            // only allow launch if grounded aka welded to an object
+            if worldState.PlayerWelded || worldState.AbsorbCount > 0 {
+                mx := e.Get("clientX").Float() * worldState.WorldScale
+                my := e.Get("clientY").Float() * worldState.WorldScale
+                worldState.LaunchPlayer(mx, my)
+            }
+        
+            // always clear joints on click to prevent sticking to multiple debris
+            worldState.ClearJoints(worldState.Player)
+        
+            */
+            return
+        }
+
+        window.addEventListener("mousedown", handleClick);
+        return () => {
+            window.removeEventListener("mousedown", handleClick);
+        }
+    })
+
     const vertical = useMediaQuery('(max-aspect-ratio:1/1)');
 
     const theme = createMuiTheme({
@@ -106,21 +162,26 @@ export const Game = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <canvas 
-                ref={canvasRef} >
-                    
-            </canvas>
+            <canvas ref={canvasRef} />
+            <World 
+                world={world} 
+                player={player} 
+                setPlayer={setPlayer} 
+                worldScale={worldScale} 
+                simSpeed={simSpeed} 
+                width={canvasSize.width} 
+                height={canvasSize.height} />
             <Drawer 
                 PaperProps={{
                     style:{
-                            minHeight: document.body.clientHeight - canvasSize.height,
-                            minWidth: document.body.clientWidth - canvasSize.width
+                        minHeight: document.body.clientHeight - canvasSize.height,
+                        minWidth: document.body.clientWidth - canvasSize.width
                     }
                 }}
                 variant="persistent"
                 anchor={vertical ? "bottom" : "right"}   
                 open={sidebarOpen} >
-                <Stats paused={paused} setPaused={setPaused} />
+                <Stats paused={paused} launches={launches} />
             </Drawer>
         </ThemeProvider>
     );
