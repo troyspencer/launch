@@ -4,7 +4,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import  { Stats } from "../stats/stats";
-import { World, IsLaunchUserData } from './world'
+import { World, IsLaunchUserData, ClearWorld, PopulateWorld } from './world'
 import * as planck from 'planck-js';
 import { LaunchPlayer, LaunchPlayerProps }  from './physics'
 
@@ -16,6 +16,7 @@ export const Game = () => {
     const [paused, setPaused] = React.useState(false)
     const [launches,setLaunches] = React.useState(0)
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
+    const [resetWorld, setResetWorld] = React.useState(false)
     const canvasRef = React.useRef(null)
 
     const calculateCanvasSize = (width: number, height: number): {width: number, height: number} => {
@@ -28,6 +29,13 @@ export const Game = () => {
     const canvasSize = calculateCanvasSize(document.body.clientWidth, document.body.clientHeight)
 
     React.useEffect(() => {
+
+        const IsPlayerOutOfBounds = (x: number, y: number, width: number, height: number): boolean => {
+            return x < 0 ||
+                x > width ||
+                y < 0 ||
+                y > height
+        }
         
         var tMark = 0
         const render = (timestamp: number) => {
@@ -44,6 +52,11 @@ export const Game = () => {
 
             world.step(timestep, 60, 120);
 
+            if (player != null && IsPlayerOutOfBounds(player.getPosition().x, player.getPosition().y, canvasSize.width*worldScale, canvasSize.height*worldScale)) {
+                setLaunches(0)
+                setResetWorld(true)
+            }
+
             // clear canvas
             context.clearRect(0,0,canvasSize.width*worldScale, canvasSize.height*worldScale)
 
@@ -56,7 +69,6 @@ export const Game = () => {
                     
                     const userData: any = body.getUserData()
                     if (IsLaunchUserData(userData)) {
-                        console.log(userData.fillStyle)
                         context.fillStyle = userData.fillStyle
                         context.strokeStyle = userData.strokeStyle
                     }
@@ -93,7 +105,7 @@ export const Game = () => {
         }
 
         window.requestAnimationFrame(render);
-    },[paused])
+    },[paused, player])
 
     React.useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
@@ -169,7 +181,9 @@ export const Game = () => {
                 worldScale={worldScale} 
                 simSpeed={simSpeed} 
                 width={canvasSize.width} 
-                height={canvasSize.height} />
+                height={canvasSize.height}
+                resetWorld={resetWorld} 
+                setResetWorld={setResetWorld} />
             <Drawer 
                 PaperProps={{
                     style:{

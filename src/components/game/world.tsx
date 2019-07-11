@@ -9,6 +9,8 @@ export interface WorldProps {
     simSpeed: number
     width: number
     height: number
+    resetWorld: boolean
+    setResetWorld: React.Dispatch<React.SetStateAction<boolean>>, 
 }
 
 export interface LaunchUserData {
@@ -29,8 +31,13 @@ export const IsLaunchUserData = (userData: any): userData is LaunchUserData => {
 
 export const World = (props: WorldProps): JSX.Element => {
     React.useEffect(() => {
-        PopulateWorld(props.world, props)
-    },[props.height, props.width])
+        if (props.resetWorld) {
+            ClearWorld(props.world)
+            props.setResetWorld(false)
+        } else {
+            PopulateWorld(props)
+        }
+    },[props.height, props.width, props.resetWorld])
     return <div />
 }
 
@@ -45,11 +52,11 @@ export const ClearWorld = (world: planck.World) => {
 	}
 }
 
-export const PopulateWorld = (world: planck.World, props: WorldProps) => {
-    ClearWorld(world)
-    CreateLaunchBlock(world, props)
-	CreatePlayer(world, props)
-	CreateGoalBlock(world, props)
+export const PopulateWorld = (props: WorldProps) => {
+    ClearWorld(props.world)
+    CreateLaunchBlock(props)
+	CreatePlayer(props)
+	CreateGoalBlock(props)
 	//CreateDebris()
 	//CreateStaticDebris()
 	//CreateBouncyDebris()
@@ -58,9 +65,9 @@ export const PopulateWorld = (world: planck.World, props: WorldProps) => {
     //CreateWater()
 }
 
-const CreatePlayer = (world: planck.World, props: WorldProps) => {
+const CreatePlayer = (props: WorldProps) => {
     const smallestDimension = props.width < props.height ? props.width : props.height
-    var player = world.createDynamicBody(
+    var player = props.world.createDynamicBody(
         planck.Vec2(
             smallestDimension * props.worldScale / 32, 
             props.height*props.worldScale - smallestDimension*props.worldScale/32
@@ -83,9 +90,9 @@ const CreatePlayer = (world: planck.World, props: WorldProps) => {
     props.setPlayer(player)
 }
 
-const CreateLaunchBlock = (world: planck.World, props: WorldProps) => {
+const CreateLaunchBlock = (props: WorldProps) => {
     const smallestDimension = props.width < props.height ? props.width : props.height
-    var launchBlock = world.createBody(
+    var launchBlock = props.world.createBody(
         planck.Vec2(
             smallestDimension * props.worldScale / 32, 
             props.height*props.worldScale - smallestDimension*props.worldScale/32
@@ -110,9 +117,9 @@ const CreateLaunchBlock = (world: planck.World, props: WorldProps) => {
     });
 }
 
-const CreateGoalBlock = (world: planck.World, props: WorldProps) => {
+const CreateGoalBlock = (props: WorldProps) => {
     const smallestDimension = props.width < props.height ? props.width : props.height
-    var goalBlock = world.createKinematicBody(
+    var goalBlock = props.world.createKinematicBody(
         planck.Vec2(
             props.width*props.worldScale - smallestDimension*props.worldScale/32, 
             smallestDimension * props.worldScale / 32,
