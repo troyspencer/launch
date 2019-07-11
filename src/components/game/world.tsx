@@ -68,15 +68,15 @@ const CreatePlayer = (world: planck.World, props: WorldProps) => {
     )
     var circle = planck.Circle(smallestDimension * props.worldScale / 64);
     const userData: LaunchUserData = {
-        fillStyle:   "rgba(0, 180,180,1)",
+        fillStyle:   "rgba(180, 180,180,1)",
         strokeStyle: "rgba(180, 180,180,1)",
         sticky:  true,
         bouncy:  false,
         breaks:  false,
         absorbs: false,
     } 
+    player.setUserData(userData)
     player.createFixture(circle, {
-        userData: userData,
         density: 1.0,
         restitution: 1.0
     });
@@ -95,6 +95,15 @@ const CreateLaunchBlock = (world: planck.World, props: WorldProps) => {
         smallestDimension*props.worldScale/32,
 		smallestDimension*props.worldScale/32,
     )
+    const userData: LaunchUserData = {
+        fillStyle:   "rgba(50,50,50,1)",
+        strokeStyle: "rgba(50,50,50,1)",
+        sticky:  true,
+        bouncy:  false,
+        breaks:  false,
+        absorbs: false,
+    } 
+    launchBlock.setUserData(userData)
     launchBlock.createFixture(launchBlockShape, {
         density: 1.0,
         restitution: 1.0
@@ -113,6 +122,15 @@ const CreateGoalBlock = (world: planck.World, props: WorldProps) => {
         smallestDimension*props.worldScale/32,
 		smallestDimension*props.worldScale/32,
     )
+    const userData: LaunchUserData = {
+        fillStyle:   "rgba(0,200,0,1)",
+        strokeStyle: "rgba(0,200,0,1)",
+        sticky:  true,
+        bouncy:  false,
+        breaks:  false,
+        absorbs: false,
+    } 
+    goalBlock.setUserData(userData)
     goalBlock.createFixture(goalBlockShape, {
         density: 1.0,
         restitution: 1.0
