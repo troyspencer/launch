@@ -4,29 +4,53 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import  { Stats } from "../stats/stats";
-import { World, IsLaunchUserData, ClearWorld, PopulateWorld } from './world'
+import { IsLaunchUserData, ClearWorld, PopulateWorld, WorldProps } from './world'
 import * as planck from 'planck-js';
 import { LaunchPlayer, LaunchPlayerProps }  from './physics'
 
 export const Game = () => {
     const [world, setWorld] = React.useState(planck.World())
     const [worldScale, setWorldScale] = React.useState(0.125)
+    const [width, setWidth] = React.useState(0)
+    const [height, setHeight] = React.useState(0)
     const [simSpeed, setSimSpeed] = React.useState(2)
     const [player, setPlayer] = React.useState<planck.Body>()
     const [paused, setPaused] = React.useState(false)
     const [launches,setLaunches] = React.useState(0)
     const [sidebarOpen, setSidebarOpen] = React.useState(true)
-    const [resetWorld, setResetWorld] = React.useState(false)
     const canvasRef = React.useRef(null)
 
-    const calculateCanvasSize = (width: number, height: number): {width: number, height: number} => {
-        if (width < height) {
-            return {width: width, height: width * 1.4}
+    React.useEffect(() => {
+        const updateSize = () => {
+            const calculateCanvasSize = (width: number, height: number): {width: number, height: number} => {
+                if (width < height) {
+                    return {width: width, height: width * 1.4}
+                }
+                return {width: height * 1.4, height: height} 
+            }
+            const canvasSize = calculateCanvasSize(document.body.clientWidth, document.body.clientHeight)
+            setWidth(canvasSize.width)
+            setHeight(canvasSize.width)
         }
-        return {width: height * 1.4, height: height} 
-    }
+        updateSize()
+        const interval = setInterval(updateSize, 1000);
+        return () => {
+            clearInterval(interval);
+        }
+    },[])
 
-    const canvasSize = calculateCanvasSize(document.body.clientWidth, document.body.clientHeight)
+    React.useEffect(() => {
+        const worldProps: WorldProps = {
+            player: player,
+            setPlayer: setPlayer,
+            width: width,
+            height: height,
+            world: world,
+            worldScale: worldScale
+        }
+
+        PopulateWorld(worldProps)
+    }, [width, height, worldScale])
 
     React.useEffect(() => {
 
@@ -39,12 +63,13 @@ export const Game = () => {
         
         var tMark = 0
         const render = (timestamp: number) => {
+
             const tDiff = timestamp - tMark
             tMark = timestamp
 
             const canvas = canvasRef.current;
-            canvas.width = canvasSize.width
-            canvas.height = canvasSize.height
+            canvas.width = width
+            canvas.height = height
             const context = canvas.getContext('2d');
             context.scale(1/0.125, 1/0.125)
             // in each frame call world.step(timeStep) with fixed timeStep
@@ -52,13 +77,12 @@ export const Game = () => {
 
             world.step(timestep, 60, 120);
 
-            if (player != null && IsPlayerOutOfBounds(player.getPosition().x, player.getPosition().y, canvasSize.width*worldScale, canvasSize.height*worldScale)) {
-                setLaunches(0)
-                setResetWorld(true)
+            if (player != null && IsPlayerOutOfBounds(player.getPosition().x, player.getPosition().y, width*worldScale, height*worldScale)) {
+                // console.log("reset")
             }
 
             // clear canvas
-            context.clearRect(0,0,canvasSize.width*worldScale, canvasSize.height*worldScale)
+            context.clearRect(0,0,width*worldScale, height*worldScale)
 
             // iterate over bodies and fixtures
             for (var body = world.getBodyList(); body; body = body.getNext()) {
@@ -101,11 +125,11 @@ export const Game = () => {
                     context.restore()
                 }
             }
-            window.requestAnimationFrame(render);
+            requestAnimationFrame(render);
         }
 
-        window.requestAnimationFrame(render);
-    },[paused, player])
+        requestAnimationFrame(render);
+    }, [width, height, player, world])
 
     React.useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
@@ -118,7 +142,7 @@ export const Game = () => {
         return () => {
             window.removeEventListener("keyup", handleKey);
         }
-    }, [paused])
+    }, [])
 
     React.useEffect(() => {
         const handleClick = (e: MouseEvent) => {
@@ -131,8 +155,8 @@ export const Game = () => {
 
             const launchPlayerProps: LaunchPlayerProps = {
                 worldScale: worldScale,
-                width: canvasSize.width,
-                height: canvasSize.height,
+                width: width,
+                height: height,
                 player: player,
                 launches: launches,
                 setLaunches: setLaunches,
@@ -174,21 +198,11 @@ export const Game = () => {
     return (
         <ThemeProvider theme={theme}>
             <canvas ref={canvasRef} />
-            <World 
-                world={world} 
-                player={player} 
-                setPlayer={setPlayer} 
-                worldScale={worldScale} 
-                simSpeed={simSpeed} 
-                width={canvasSize.width} 
-                height={canvasSize.height}
-                resetWorld={resetWorld} 
-                setResetWorld={setResetWorld} />
             <Drawer 
                 PaperProps={{
                     style:{
-                        minHeight: document.body.clientHeight - canvasSize.height,
-                        minWidth: document.body.clientWidth - canvasSize.width
+                        minHeight: document.body.clientHeight - height,
+                        minWidth: document.body.clientWidth - width
                     }
                 }}
                 variant="persistent"

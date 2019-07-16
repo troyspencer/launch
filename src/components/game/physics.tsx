@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { World, WorldProps } from './world'
 import * as planck from 'planck-js';
 
 export interface LaunchPlayerProps { 

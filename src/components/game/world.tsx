@@ -6,11 +6,8 @@ export interface WorldProps {
     player: planck.Body,
     setPlayer: React.Dispatch<React.SetStateAction<planck.Body>>, 
     worldScale: number
-    simSpeed: number
     width: number
-    height: number
-    resetWorld: boolean
-    setResetWorld: React.Dispatch<React.SetStateAction<boolean>>, 
+    height: number 
 }
 
 export interface LaunchUserData {
@@ -27,18 +24,6 @@ export const IsLaunchUserData = (userData: any): userData is LaunchUserData => {
         return false
     }
     return userData.fillStyle !== undefined
-}
-
-export const World = (props: WorldProps): JSX.Element => {
-    React.useEffect(() => {
-        if (props.resetWorld) {
-            ClearWorld(props.world)
-            props.setResetWorld(false)
-        } else {
-            PopulateWorld(props)
-        }
-    },[props.height, props.width, props.resetWorld])
-    return <div />
 }
 
 export const ClearWorld = (world: planck.World) => {
